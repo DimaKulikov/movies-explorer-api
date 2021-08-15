@@ -47,7 +47,7 @@ const movieSchema = new mongoose.Schema({
   owner: {
     type: String,
     required: true,
-    validate: (input) => validator.isMongoId(input),
+    validate: validator.isMongoId,
   },
   movieID: {
     type: String,

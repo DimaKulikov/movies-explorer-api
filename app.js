@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const fakeUser = require('./middlewares/fakeUser');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
 
@@ -12,11 +12,18 @@ mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
 });
 
 // Middlewares
+app.use(requestLogger);
 app.use(express.json());
-app.use(fakeUser);
+// app.use(fakeUser);
+
+// Auth
+// app.use(auth);
 
 // Routes
-app.use(require('./routes'));
+app.use(require('./routes/index.routes'));
+
+// Error logger
+app.use(errorLogger);
 
 // Server
 app.listen(4000, () => console.log('server started on 4000'));

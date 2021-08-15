@@ -1,22 +1,8 @@
 const MoviesRouter = require('express').Router();
-const MovieModel = require('../models/movie.model');
+const { saveMovie, getAllMovies, deleteMovie } = require('../controllesrs/movies.controllers');
 
-MoviesRouter.get('/', (req, res, next) => {
-  MovieModel.find({})
-    .then((cards) => res.send(cards))
-    .catch(next);
-});
-
-MoviesRouter.post('/', (req, res, next) => {
-  const {
-    country, director, duration, year, description,
-    image, trailer, nameRU, nameEN, thumbnail, movieId,
-  } = req.body;
-  MovieModel.create({ country, director, duration, year, description,
-    image, trailer, nameRU, nameEN, thumbnail, movieId,
-  })
-    .then((movie) => res.send(movie))
-    .catch(next);
-});
+MoviesRouter.get('/', getAllMovies);
+MoviesRouter.post('/', saveMovie);
+MoviesRouter.delete('/', deleteMovie);
 
 module.exports = MoviesRouter;
