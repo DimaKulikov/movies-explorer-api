@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const expressValidator = require('express-validator');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
@@ -14,6 +15,7 @@ mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
 // Middlewares
 app.use(requestLogger);
 app.use(express.json());
+app.use(expressValidator);
 // app.use(fakeUser);
 
 // Auth
