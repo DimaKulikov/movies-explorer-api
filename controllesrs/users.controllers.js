@@ -1,3 +1,4 @@
+const { body } = require('express-validator/check');
 const UserModel = require('../models/user.model');
 
 exports.getUser = (req, res, next) => {
@@ -15,4 +16,17 @@ exports.updateUser = (req, res, next) => {
     .orFail()
     .then((user) => res.send(user))
     .catch(next);
+};
+
+exports.validate = (method) => {
+  switch (method) {
+    case 'updateUser': {
+      return [
+        body('email', 'некорректный email').exists().isEmail(),
+        body('name', 'некорректное имя пользователя').exists().isString().isLength({ min: 3 }),
+      ];
+    }
+    default:
+      return true;
+  }
 };
