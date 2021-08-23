@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const UserModel = require('../models/user.model');
+const { ApiError } = require('../utils/utils');
 
 exports.signup = (req, res, next) => {
   const { email, password, name } = req.body;
@@ -11,7 +12,13 @@ exports.signup = (req, res, next) => {
       name,
     }))
     .then((user) => res.send({ _id: user._id, name }))
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'MongoError' && err.code === 11000) {
+        next(ApiError.Conflict('Пользователь с таким email уже существует'));
+        return;
+      }
+      next(err);
+    });
 };
 
 exports.signin = (req, res, next) => {
@@ -21,5 +28,7 @@ exports.signin = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, 'secret');
       res.send({ token });
     })
-    .catch(next);
+    .catch((err) => {
+      next(err);
+    });
 }

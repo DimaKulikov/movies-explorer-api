@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
 
@@ -24,6 +25,9 @@ app.use(require('./routes/index.routes'));
 
 // Error logger
 app.use(errorLogger);
+
+// Error handler
+app.use(errorHandler);
 
 // Server
 app.listen(4000, () => console.log('server started on 4000'));

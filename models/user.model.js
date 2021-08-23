@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const { ApiError } = require('../utils/utils');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -28,10 +29,10 @@ const userSchema = new mongoose.Schema({
 userSchema.statics.findByCredentials = function findByCredentials(email, password) {
   return this.findOne({ email })
     .select('+password')
-    .orFail('auth error')
+    .orFail(ApiError.Authtorization('Ошибка авторизации'))
     .then((user) => bcrypt.compare(password, user.password)
       .then((matched) => {
-        if (!matched) throw new Error('auth error');
+        if (!matched) throw ApiError.Authtorization('Ошибка авторизации');
         return user;
       }));
 };
