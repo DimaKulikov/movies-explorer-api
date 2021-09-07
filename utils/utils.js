@@ -1,5 +1,12 @@
 const validator = require('validator');
 
+exports.isMongoDuplicateError = (err) => {
+  if (err.name === 'MongoError' && err.code === 11000) {
+    return true;
+  }
+  return false;
+};
+
 exports.urlValidator = (input) => validator.isURL(input, { require_protocol: true });
 
 exports.ApiError = class ApiError extends Error {

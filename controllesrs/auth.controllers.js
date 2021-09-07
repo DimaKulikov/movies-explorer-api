@@ -1,8 +1,8 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { body } = require('express-validator/check');
+const { body } = require('express-validator');
 const UserModel = require('../models/user.model');
-const { ApiError } = require('../utils/utils');
+const { ApiError, isMongoDuplicateError } = require('../utils/utils');
 
 exports.signup = (req, res, next) => {
   const { email, password, name } = req.body;
@@ -14,7 +14,7 @@ exports.signup = (req, res, next) => {
     }))
     .then((user) => res.send({ _id: user._id, name }))
     .catch((err) => {
-      if (err.name === 'MongoError' && err.code === 11000) {
+      if (isMongoDuplicateError(err)) {
         next(ApiError.Conflict('Пользователь с таким email уже существует'));
         return;
       }
@@ -52,6 +52,6 @@ exports.validate = (method) => {
           .isString(),
       ];
     default:
-      return true;
+      throw new Error('Некорректный метод валидации');
   }
 };

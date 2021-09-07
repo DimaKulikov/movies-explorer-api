@@ -29,10 +29,10 @@ const userSchema = new mongoose.Schema({
 userSchema.statics.findByCredentials = function findByCredentials(email, password) {
   return this.findOne({ email })
     .select('+password')
-    .orFail(ApiError.Authtorization('Ошибка авторизации'))
+    .orFail(ApiError.Authorization('Ошибка авторизации'))
     .then((user) => bcrypt.compare(password, user.password)
       .then((matched) => {
-        if (!matched) throw ApiError.Authtorization('Ошибка авторизации');
+        if (!matched) throw ApiError.Authorization('Ошибка авторизации');
         return user;
       }));
 };

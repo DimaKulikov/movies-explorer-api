@@ -1,4 +1,4 @@
-const { body } = require('express-validator/check');
+const { body } = require('express-validator');
 const MovieModel = require('../models/movie.model');
 
 exports.getAllMovies = (req, res, next) => {
@@ -54,10 +54,10 @@ exports.validate = (method) => {
         body('movieId', 'некорректно заполненное поле "movieId"').exists().isString(),
         body('nameRU', 'некорректно заполненное поле "nameRU"').exists().isString(),
         body('nameEN', 'некорректно заполненное поле "nameEN"').exists().isString(),
-      ]
+      ];
     case 'deleteMovie':
       return [
-        body('movieId', 'некорректный id фильма').exists().isMongoId()
+        body('movieId', 'некорректный id фильма').exists().isMongoId(),
       ];
     default:
       return true;
