@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { body } = require('express-validator/check');
+const { body } = require('express-validator');
 const UserModel = require('../models/user.model');
 const { ApiError } = require('../utils/utils');
 
@@ -52,6 +52,6 @@ exports.validate = (method) => {
           .isString(),
       ];
     default:
-      return true;
+      throw new Error('Некорректный метод валидации');
   }
 };

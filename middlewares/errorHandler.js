@@ -1,14 +1,20 @@
+const { Result } = require('express-validator');
+
 module.exports = (err, req, res, next) => {
+  // a middleware to catch all request errors, parse errors,
+  // and send back responses with response codes other than
+
   // если у ошибки нет статуса, выставляем 500
-  const { statusCode = 500, message } = err;
+  let { statusCode = 500, message } = err;
 
-  // handle mongoose duplicate error
-  // if (err.code === 11000) {
-  //   statusCode = 400;
-  //   message = 'asdf';
-  // }
+  // Проверяем что ошибка принадлежит express-validator
+  if (err instanceof Result) {
+    statusCode = 400;
+    message = { errors: err.mapped() };
+    // Object.values(err.mapped()).map((errWithoutDupes) => errWithoutDupes.msg).join(', ');
+  }
 
-
+  // отправляем ответ с ошибкой
   res
     .status(statusCode)
     .send({
@@ -17,4 +23,5 @@ module.exports = (err, req, res, next) => {
         ? 'На сервере произошла ошибка'
         : message,
     });
+  next();
 };
